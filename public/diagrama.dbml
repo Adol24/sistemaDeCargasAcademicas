@@ -1,0 +1,33 @@
+Table users
+{
+  id integer [pk, increment]
+  name varchar
+  email varchar
+  rol enum('admin', 'editor', 'lector') [not null]
+  password varchar
+}
+
+Table licenciaturas
+{
+  id integer [pk, increment]
+  nombre varchar(255)
+  sistema enum('escolarizado', 'modular')
+}
+
+Table materias
+{
+  id integer [pk, increment]
+  licenciatura_id integer [ref: > licenciaturas.id]
+  clave varchar(50)
+  nombre varchar(255)
+  creditos integer
+  
+}
+
+
+
+
+
+
+
+
