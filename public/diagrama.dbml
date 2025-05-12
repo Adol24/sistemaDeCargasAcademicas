@@ -1,10 +1,31 @@
-Table users
+// Tablas Básicas
+
+Table sistema
 {
   id integer [pk, increment]
-  name varchar
-  email varchar
-  rol enum('admin', 'editor', 'lector') [not null]
-  password varchar
+  nombre varchar(100)
+  -- valores: 'Escolarizado', 'Modular'
+}
+
+Table turno
+{
+  id integer [pk, increment]
+  nombre varchar(100)
+   -- valores: 'Matutino', 'Vespertino'
+}
+
+Table sede
+{
+  id integer [pk, increment]
+  nombre varchar(100)
+}
+
+Table periodoAcademiico
+{
+  id integer [pk, increment]
+  nombre varchar(100)
+  fecha_inicio date
+  fecha_fin date
 }
 
 Table licenciaturas
@@ -14,6 +35,17 @@ Table licenciaturas
   sistema enum('escolarizado', 'modular')
 }
 
+//Sistema Modular
+Table modulos
+{
+  id integer [pk, increment]
+  licenciatura_id integer [ref: > licenciaturas.id]
+  sede_id integer [ref: > sede.id]
+  numero_modulo integer
+  nombre varchar(255)
+  duracion_semanas integer
+}
+
 Table materias
 {
   id integer [pk, increment]
@@ -21,8 +53,67 @@ Table materias
   clave varchar(50)
   nombre varchar(255)
   creditos integer
-  
 }
+
+Table Grupos
+{
+  id integer [pk, increment]
+  licenciatura_id integer [ref: > licenciaturas.id]
+  modulo_id integer [ref: > modulos.id]
+  nombre varchar(255)
+  periodoAcademiico_id integer [ref: > periodoAcademiico.id]
+}
+
+Table diaSemanas
+{
+  id integer [pk, increment]
+  nombre_dia varchar(255)
+}
+
+Table franjasHorarias
+{
+  id integer [pk, increment]
+  hora_inicio time
+  hora_fin time
+}
+
+Table categoriaDocente
+{
+  id integer [pk, increment]
+  nombre varchar(255)
+  max_horas_semana smartint
+}
+
+Table docentes
+{
+  id integer [pk, increment]
+  nombre varchar(255)
+  apellidos varchar(255)
+  categoria_docente_id integer [ref: > categoriaDocente.id]
+}
+
+Table asignaciones
+{
+  id integer [pk, increment]
+  grupo_id integer [ref: > Grupos.id]
+  materia_id integer [ref: > materias.id]
+  docente_id integer [ref: > docentes.id]
+  dia_semana_id integer [ref: > diaSemanas.id]
+  franja_horaria_id integer [ref: > franjasHorarias.id]
+  horas_semanales integer
+}
+
+Table users
+{
+  id integer [pk, increment]
+  name varchar
+  email varchar
+  rol enum('admin', 'editor', 'lector') [not null]
+  password varchar
+}
+
+
+
 
 
 
