@@ -13,10 +13,13 @@ class Asignatura extends Model
         'clave',
         'creditos',
         'tipo'
+        
     ];
 
+  
     public function licenciatura()
     {
-        return $this->belongsTo(Licenciatura::class);
+        // indicamos la FK personalizada
+        return $this->belongsTo(Licenciatura::class, 'id_licenciatura');
     }
 }

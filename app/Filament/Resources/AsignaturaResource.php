@@ -5,10 +5,13 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\AsignaturaResource\Pages;
 use App\Filament\Resources\AsignaturaResource\RelationManagers;
 use App\Models\Asignatura;
+use App\Models\Licenciatura;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -23,9 +26,16 @@ class AsignaturaResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('id_licenciatura')
+
+                Select::make('id_licenciatura')
+                    ->relationship('licenciatura', 'nombre')
                     ->required()
-                    ->numeric(),
+                    ->label('Licenciatura')
+                    //->searchable()
+                    ->placeholder('Seleccione una licenciatura'),
+
+
+               
                 Forms\Components\TextInput::make('nombre')
                     ->required()
                     ->maxLength(255),
@@ -35,8 +45,12 @@ class AsignaturaResource extends Resource
                 Forms\Components\TextInput::make('creditos')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('tipo')
-                    ->required(),
+                Forms\Components\Select::make('tipo')
+                ->options([
+                'obligatoria' => 'Obligatoria',
+                'optativa' => 'Optativa',
+                ])
+                ->required(),
             ]);
     }
 
@@ -65,10 +79,23 @@ class AsignaturaResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('licenciatura_id')
+                ->label('Licenciatura')
+                ->options(Licenciatura::pluck('nombre', 'id')->toArray())
+                ->searchable(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                ->button()
+                ->color('success'),
+               // ->icon('heroicon-o-pencil')
+               // ->label('Editar')
+
+               Tables\Actions\DeleteAction::make()
+                ->button()
+                ->color('danger'),
+                //->icon('heroicon-o-trash')
+                //->label('Eliminar')
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
